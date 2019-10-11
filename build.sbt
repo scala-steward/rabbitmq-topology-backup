@@ -33,7 +33,7 @@ lazy val `rabbitmq-topology-backup` = (project in file("."))
         "software.amazon.awssdk" % "kms" % "2.7.18",
         "com.dwolla" %% "fs2-aws-java-sdk2" % fs2AwsVersion,
         "com.dwolla" %% "fs2-aws-lambda-io-app" % fs2AwsVersion,
-        "org.http4s" %% "http4s-blaze-client" % http4sVersion,
+        "org.http4s" %% "http4s-ember-client" % http4sVersion,
         "org.http4s" %% "http4s-circe" % http4sVersion,
         "org.http4s" %% "http4s-dsl" % http4sVersion,
         "com.dwolla" %% "testutils-scalatest-fs2" % "2.0.0-M3" % Test,
