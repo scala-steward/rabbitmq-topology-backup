@@ -6,7 +6,7 @@ import com.dwolla.rabbitmq.topology.model._
 import io.circe._
 import org.http4s._
 import org.http4s.client.dsl.Http4sClientDsl
-import _root_.org.http4s.ember.client._
+import org.http4s.client.blaze._
 import org.http4s.Method._
 import org.http4s.circe._
 import org.http4s.client.Client
@@ -27,11 +27,9 @@ object RabbitMqTopologyAlg {
   private def redactPasswordFields(j: Json): Json =
     j.fold(j, Json.fromBoolean, Json.fromJsonNumber, Json.fromString, a => Json.fromValues(a.map(redactPasswordFields)), redactPasswordFields)
 
-  def resource[F[_] : Concurrent : Timer : ContextShift](baseUri: Uri,
-                                                         username: Username,
-                                                         password: Password): Resource[F, RabbitMqTopologyAlg[F]] =
-    EmberClientBuilder.default[F]
-      .build
+  def resource[F[_] : ConcurrentEffect](blocker: Blocker, baseUri: Uri, username: Username, password: Password): Resource[F, RabbitMqTopologyAlg[F]] =
+    BlazeClientBuilder[F](blocker.blockingContext)
+      .resource
       .map(client.middleware.Logger[F](logHeaders = true, logBody = false))
       .map(new RabbitMqTopologyAlgImpl[F](_, baseUri, username, password))
 
